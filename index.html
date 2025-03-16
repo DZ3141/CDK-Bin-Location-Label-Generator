@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bin Label Generator</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #232325;
+            margin: 0;
+            padding: 20px;
+            color: #ffffff;
+        }
+        .generator-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #2c2c2e;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        h2 {
+            color: #ffffff;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+            font-size: 28px;
+        }
+        p {
+            color: #cccccc;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 16px;
+        }
+        .components-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        .component-box {
+            background-color: #333335;
+            border-radius: 8px;
+            padding: 18px;
+            border: 1px solid #444446;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        .component-box:hover {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .component-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            justify-content: space-between;
+        }
+        .component-title {
+            display: flex;
+            align-items: center;
+        }
+        .component-title input[type="checkbox"] {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .component-title label {
+            font-weight: 600;
+            color: #ffffff;
+            margin: 0;
+            cursor: pointer;
+        }
+        .component-actions {
+            display: flex;
+            align-items: center;
+        }
+        .add-range-btn {
+            background-color: #f6b337;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            font-size: 20px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        }
+        .add-range-btn:hover {
+            background-color: #e5a220;
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .remove-range-btn {
+            background-color: #e53e3e;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 18px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        }
+        .remove-range-btn:hover {
+            background-color: #c53030;
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .range-inputs {
+            display: flex;
+            gap: 12px;
+        }
+        .range-inputs input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #444446;
+            background-color: #232325;
+            color: #ffffff;
+            border-radius: 6px;
+            width: 100%;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+        .range-inputs input:focus {
+            border-color: #f6b337;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(246, 179, 55, 0.2);
+        }
+        .range-inputs input::placeholder {
+            color: #888888;
+        }
+        .quantity-container {
+            margin-bottom: 30px;
+            background-color: #333335;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #444446;
+        }
+        .quantity-container label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        .quantity-container input {
+            padding: 12px;
+            border: 1px solid #444446;
+            background-color: #232325;
+            color: #ffffff;
+            border-radius: 6px;
+            width: 100%;
+            max-width: 200px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+        .quantity-container input:focus {
+            border-color: #f6b337;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(246, 179, 55, 0.2);
+        }
+        button {
+            background-color: #f6b337;
+            color: #232325;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-right: 12px;
+            transition: all 0.2s ease;
+        }
+        button:hover {
+            background-color: #ffc659;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(246, 179, 55, 0.3);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .download-btn {
+            background-color: #44a89e;
+            color: white;
+        }
+        .download-btn:hover {
+            background-color: #53c3b8;
+            box-shadow: 0 4px 10px rgba(68, 168, 158, 0.3);
+        }
+        .copy-btn {
+            background-color: #b35f2e;
+            color: white;
+        }
+        .copy-btn:hover {
+            background-color: #d27539;
+            box-shadow: 0 4px 10px rgba(179, 95, 46, 0.3);
+        }
+        #results {
+            margin-top: 40px;
+            padding: 25px;
+            border-radius: 10px;
+            background-color: #333335;
+            border: 1px solid #444446;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        #results h3 {
+            color: #ffffff;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 22px;
+        }
+        #sample-labels {
+            margin: 20px 0;
+            font-family: monospace;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+        }
+        #sample-labels div {
+            padding: 10px;
+            background-color: #232325;
+            border: 1px solid #444446;
+            border-radius: 6px;
+            text-align: center;
+            transition: all 0.2s ease;
+            color: #ffffff;
+        }
+        #sample-labels div:hover {
+            background-color: #2c2c2e;
+            transform: scale(1.03);
+            border-color: #f6b337;
+        }
+        #formatted-output {
+            margin: 20px 0;
+            white-space: pre-wrap;
+            font-family: monospace;
+            background-color: #232325;
+            color: #ffffff;
+            padding: 20px;
+            border: 1px solid #444446;
+            border-radius: 6px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        .success-message {
+            background-color: #48bb78;
+            color: white;
+            padding: 14px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+            animation: fadeOut 2s forwards;
+            animation-delay: 1.5s;
+            text-align: center;
+        }
+        @keyframes fadeOut {
+            from {opacity: 1;}
+            to {opacity: 0;}
+        }
+        #label-count {
+            font-size: 16px;
+            color: #cccccc;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        @media (max-width: 600px) {
+            .components-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            .button-group {
+                flex-direction: column;
+            }
+            button {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            .generator-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="generator-container">
+        <h2>Bin Location Label Generator</h2>
+        <p>Generate custom bin location labels with multiple character support</p>
+        
+        <div class="components-grid">
+            <div id="prefix-container">
+                <div class="component-box" data-component="prefix" data-index="0">
+                    <div class="component-header">
+                        <div class="component-title">
+                            <input type="checkbox" id="use-prefix-0" checked>
+                            <label for="use-prefix-0">Prefix</label>
+                        </div>
+                        <div class="component-actions">
+                            <button class="add-range-btn" data-component="prefix">+</button>
+                        </div>
+                    </div>
+                    <div id="prefix-inputs-0" class="range-inputs">
+                        <input type="text" class="prefix-start" value="A" placeholder="Start">
+                        <input type="text" class="prefix-end" value="A" placeholder="End">
+                    </div>
+                </div>
+            </div>
+            
+            <div id="section-container">
+                <div class="component-box" data-component="section" data-index="0">
+                    <div class="component-header">
+                        <div class="component-title">
+                            <input type="checkbox" id="use-section-0" checked>
+                            <label for="use-section-0">Section</label>
+                        </div>
+                        <div class="component-actions">
+                            <button class="add-range-btn" data-component="section">+</button>
+                        </div>
+                    </div>
+                    <div id="section-inputs-0" class="range-inputs">
+                        <input type="text" class="section-start" value="1" placeholder="Start">
+                        <input type="text" class="section-end" value="1" placeholder="End">
+                    </div>
+                </div>
+            </div>
+            
+            <div id="bin-container">
+                <div class="component-box" data-component="bin" data-index="0">
+                    <div class="component-header">
+                        <div class="component-title">
+                            <input type="checkbox" id="use-bin-0" checked>
+                            <label for="use-bin-0">Bin</label>
+                        </div>
+                        <div class="component-actions">
+                            <button class="add-range-btn" data-component="bin">+</button>
+                        </div>
+                    </div>
+                    <div id="bin-inputs-0" class="range-inputs">
+                        <input type="text" class="bin-start" value="1" placeholder="Start">
+                        <input type="text" class="bin-end" value="100" placeholder="End">
+                    </div>
+                </div>
+            </div>
+            
+            <div id="shelf-container">
+                <div class="component-box" data-component="shelf" data-index="0">
+                    <div class="component-header">
+                        <div class="component-title">
+                            <input type="checkbox" id="use-shelf-0" checked>
+                            <label for="use-shelf-0">Shelf</label>
+                        </div>
+                        <div class="component-actions">
+                            <button class="add-range-btn" data-component="shelf">+</button>
+                        </div>
+                    </div>
+                    <div id="shelf-inputs-0" class="range-inputs">
+                        <input type="text" class="shelf-start" value="1" placeholder="Start">
+                        <input type="text" class="shelf-end" value="1" placeholder="End">
+                    </div>
+                </div>
+            </div>
+            
+            <div id="suffix-container">
+                <div class="component-box" data-component="suffix" data-index="0">
+                    <div class="component-header">
+                        <div class="component-title">
+                            <input type="checkbox" id="use-suffix-0" checked>
+                            <label for="use-suffix-0">Suffix</label>
+                        </div>
+                        <div class="component-actions">
+                            <button class="add-range-btn" data-component="suffix">+</button>
+                        </div>
+                    </div>
+                    <div id="suffix-inputs-0" class="range-inputs">
+                        <input type="text" class="suffix-start" value="A" placeholder="Start">
+                        <input type="text" class="suffix-end" value="A" placeholder="End">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="quantity-container">
+            <label for="label-quantity">Number of Labels Needed for Each Bin</label>
+            <input type="number" id="label-quantity" value="1" min="1" max="100">
+        </div>
+        
+        <button id="generate-btn">Generate Labels</button>
+        
+        <div id="results">
+            <h3>Generated Labels</h3>
+            <p id="label-count"></p>
+            <div id="sample-labels"></div>
+            
+            <div id="formatted-output"></div>
+            
+            <div class="button-group">
+                <button id="download-btn" class="download-btn">Download CSV</button>
+                <button id="copy-btn" class="copy-btn">Copy to Clipboard</button>
+            </div>
+            
+            <div id="copy-success" class="success-message">
+                Copied to clipboard!
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add/remove range functionality
+        document.querySelectorAll('.add-range-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const componentType = this.getAttribute('data-component');
+                addNewRange(componentType);
+            });
+        });
+        
+        function addNewRange(componentType) {
+            const container = document.getElementById(`${componentType}-container`);
+            const boxes = container.querySelectorAll(`.component-box[data-component="${componentType}"]`);
+            const newIndex = boxes.length;
+            
+            // Create new component box
+            const newBox = document.createElement('div');
+            newBox.className = 'component-box';
+            newBox.setAttribute('data-component', componentType);
+            newBox.setAttribute('data-index', newIndex);
+            
+            // Set default values based on component type
+            let startValue = "1";
+            let endValue = "1";
+            
+            if (componentType === 'prefix' || componentType === 'suffix') {
+                startValue = "A";
+                endValue = "A";
+            } else if (componentType === 'bin') {
+                endValue = "100";
+            }
+            
+            // Create HTML content for the new box
+            newBox.innerHTML = `
+                <div class="component-header">
+                    <div class="component-title">
+                        <input type="checkbox" id="use-${componentType}-${newIndex}" checked>
+                        <label for="use-${componentType}-${newIndex}">${componentType.charAt(0).toUpperCase() + componentType.slice(1)} ${newIndex + 1}</label>
+                    </div>
+                    <div class="component-actions">
+                        <button class="remove-range-btn" data-component="${componentType}" data-index="${newIndex}">-</button>
+                        <button class="add-range-btn" data-component="${componentType}">+</button>
+                    </div>
+                </div>
+                <div id="${componentType}-inputs-${newIndex}" class="range-inputs">
+                    <input type="text" class="${componentType}-start" value="${startValue}" placeholder="Start">
+                    <input type="text" class="${componentType}-end" value="${endValue}" placeholder="End">
+                </div>
+            `;
+            
+            // Add to container
+            container.appendChild(newBox);
+            
+            // Add event listener to new remove button
+            newBox.querySelector('.remove-range-btn').addEventListener('click', function() {
+                const index = this.getAttribute('data-index');
+                const component = this.getAttribute('data-component');
+                removeRange(component, index);
+            });
+            
+            // Add event listener to new add button
+            newBox.querySelector('.add-range-btn').addEventListener('click', function() {
+                const component = this.getAttribute('data-component');
+                addNewRange(component);
+            });
+            
+            // Add event listener to checkbox
+            newBox.querySelector(`#use-${componentType}-${newIndex}`).addEventListener('change', function() {
+                document.getElementById(`${componentType}-inputs-${newIndex}`).style.display = this.checked ? 'flex' : 'none';
+            });
+        }
+        
+        function removeRange(componentType, index) {
+            const box = document.querySelector(`.component-box[data-component="${componentType}"][data-index="${index}"]`);
+            if (box) {
+                box.remove();
+            }
+        }
+        
+        // Toggle component inputs based on checkboxes
+        document.getElementById('use-prefix-0').addEventListener('change', function() {
+            document.getElementById('prefix-inputs-0').style.display = this.checked ? 'flex' : 'none';
+        });
+        
+        document.getElementById('use-section-0').addEventListener('change', function() {
+            document.getElementById('section-inputs-0').style.display = this.checked ? 'flex' : 'none';
+        });
+        
+        document.getElementById('use-bin-0').addEventListener('change', function() {
+            document.getElementById('bin-inputs-0').style.display = this.checked ? 'flex' : 'none';
+        });
+        
+        document.getElementById('use-shelf-0').addEventListener('change', function() {
+            document.getElementById('shelf-inputs-0').style.display = this.checked ? 'flex' : 'none';
+        });
+        
+        document.getElementById('use-suffix-0').addEventListener('change', function() {
+            document.getElementById('suffix-inputs-0').style.display = this.checked ? 'flex' : 'none';
+        });
+        
+        // Generate character range helper function
+        function generateCharacterRange(start, end) {
+            const startCode = start.charCodeAt(0);
+            const endCode = end.charCodeAt(0);
+            
+            if (startCode > endCode) {
+                return [start, end];
+            }
+            
+            return Array.from({length: endCode - startCode + 1}, (_, i) => 
+                String.fromCharCode(startCode + i));
+        }
+        
+        // Generate number range helper function
+        function generateNumberRange(start, end) {
+            const startNum = parseInt(start);
+            const endNum = parseInt(end);
+            
+            if (isNaN(startNum) || isNaN(endNum) || startNum > endNum) {
+                return [start, end];
+            }
+            
+            // Determine padding based on end number
+            const padding = end.toString().length;
+            
+            return Array.from({length: endNum - startNum + 1}, (_, i) => 
+                (startNum + i).toString().padStart(padding, '0'));
+        }
+        
+        // Helper function to generate range values
+        function generateRange(start, end) {
+            // For single characters (A-Z, a-z)
+            if (start.length === 1 && end.length === 1 && 
+                start.match(/[a-zA-Z]/) && end.match(/[a-zA-Z]/)) {
+                return generateCharacterRange(start, end);
+            }
+            
+            // For numbers
+            if (start.match(/^\d+$/) && end.match(/^\d+$/)) {
+                return generateNumberRange(start, end);
+            }
+            
+            // For alphanumeric patterns like A1 to A10
+            const alphaNumPattern = /^([A-Za-z]+)(\d+)$/;
+            const startAlphaNum = start.match(alphaNumPattern);
+            const endAlphaNum = end.match(alphaNumPattern);
+            
+            if (startAlphaNum && endAlphaNum && startAlphaNum[1] === endAlphaNum[1]) {
+                // Same letter prefix with different numbers (e.g., A1 to A10)
+                const prefix = startAlphaNum[1];
+                const startNumber = parseInt(startAlphaNum[2]);
+                const endNumber = parseInt(endAlphaNum[2]);
+                
+                if (!isNaN(startNumber) && !isNaN(endNumber)) {
+                    if (startNumber > endNumber) {
+                        return [start, end];
+                    }
+                    
+                    // Determine padding based on end number
+                    const padding = endAlphaNum[2].length;
+                    
+                    return Array.from({length: endNumber - startNumber + 1}, (_, i) => 
+                        prefix + (startNumber + i).toString().padStart(padding, '0'));
+                }
+            }
+            
+            // For other multi-character inputs, just return them as individual items
+            return [start, end];
+        }
+        
+        // Get component data helper function
+        function getComponentData(componentType) {
+            const container = document.getElementById(`${componentType}-container`);
+            const boxes = container.querySelectorAll(`.component-box[data-component="${componentType}"]`);
+            
+            const rangeData = [];
+            
+            boxes.forEach(box => {
+                const index = box.getAttribute('data-index');
+                const isEnabled = document.getElementById(`use-${componentType}-${index}`).checked;
+                
+                if (isEnabled) {
+                    const startInput = box.querySelector(`.${componentType}-start`);
+                    const endInput = box.querySelector(`.${componentType}-end`);
+                    
+                    if (startInput && endInput) {
+                        rangeData.push({
+                            start: startInput.value || (componentType === 'prefix' || componentType === 'suffix' ? 'A' : '1'),
+                            end: endInput.value || startInput.value || (componentType === 'prefix' || componentType === 'suffix' ? 'A' : '1')
+                        });
+                    }
+                }
+            });
+            
+            return rangeData;
+        }
+        
+        // Generate bin labels with multiple ranges
+        function generateBinLabelsWithMultipleRanges(componentData) {
+            // Generate value sets for each component
+            const valueSets = {};
+            
+            for (const [componentType, ranges] of Object.entries(componentData)) {
+                valueSets[componentType] = [];
+                
+                // If no ranges are defined, add empty string
+                if (ranges.length === 0) {
+                    valueSets[componentType].push('');
+                    continue;
+                }
+                
+                // Process all ranges for this component
+                ranges.forEach(range => {
+                    const values = generateRange(range.start, range.end);
+                    valueSets[componentType] = valueSets[componentType].concat(values);
+                });
+                
+                // Remove duplicates
+                valueSets[componentType] = [...new Set(valueSets[componentType])];
+            }
+            
+            // Generate all combinations
+            const labels = [];
+            
+            // For browser performance, limit to a reasonable number
+            const totalCombinations = 
+                valueSets.prefix.length * 
+                valueSets.section.length * 
+                valueSets.bin.length * 
+                valueSets.shelf.length * 
+                valueSets.suffix.length;
+            
+            if (totalCombinations > 10000) {
+                alert("Warning: You're generating " + totalCombinations + 
+                      " labels, which may slow down your browser. Consider narrowing your ranges.");
+            }
+            
+            // Generate combinations (with a reasonable limit)
+            const maxLabels = 100000; // Set a max limit to prevent browser crashes
+            
+            for (const prefix of valueSets.prefix) {
+                for (const section of valueSets.section) {
+                    for (const bin of valueSets.bin) {
+                        for (const shelf of valueSets.shelf) {
+                            for (const suffix of valueSets.suffix) {
+                                const label = `${prefix}${section}${bin}${shelf}${suffix}`;
+                                if (label.trim() !== '') {  // Don't add empty labels
+                                    labels.push(label);
+                                }
+                                
+                                if (labels.length >= maxLabels) {
+                                    return labels;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return labels;
+        }
+        
+        // Range generator functionality
+        document.getElementById('generate-btn').addEventListener('click', function() {
+            // Get all component data
+            const componentData = {
+                prefix: getComponentData('prefix'),
+                section: getComponentData('section'),
+                bin: getComponentData('bin'),
+                shelf: getComponentData('shelf'),
+                suffix: getComponentData('suffix')
+            };
+            
+            // Get quantity
+            const quantity = parseInt(document.getElementById('label-quantity').value) || 1;
+            
+            // Generate bin labels
+            const labels = generateBinLabelsWithMultipleRanges(componentData);
+            
+            // Display results
+            document.getElementById('label-count').textContent = `Total unique bins: ${labels.length} (${labels.length * quantity} total labels)`;
+            
+            // Show sample labels
+            const sampleLabelsDiv = document.getElementById('sample-labels');
+            sampleLabelsDiv.innerHTML = '';
+            
+            const sampleSize = Math.min(12, labels.length);
+            for (let i = 0; i < sampleSize; i++) {
+                sampleLabelsDiv.innerHTML += `<div>${labels[i]}</div>`;
+            }
+            
+            if (labels.length > sampleSize) {
+                sampleLabelsDiv.innerHTML += '<div>...</div>';
+                sampleLabelsDiv.innerHTML += `<div>${labels[labels.length - 1]}</div>`;
+            }
+            
+            // Generate formatted output with quantities
+            const formattedOutput = document.getElementById('formatted-output');
+            formattedOutput.style.display = 'block';
+            
+            // Create the formatted text with quantities
+            let formattedText = '';
+            for (const label of labels) {
+                formattedText += `${quantity}\n${label}\n`;
+            }
+            
+            // Set the formatted text
+            formattedOutput.textContent = formattedText;
+            
+            // Show results section
+            document.getElementById('results').style.display = 'block';
+            
+            // Prepare data for download and clipboard
+            window.labelsData = labels;
+            window.formattedLabelsData = formattedText;
+        });
+        
+        document.getElementById('download-btn').addEventListener('click', function() {
+            if (!window.labelsData || window.labelsData.length === 0) return;
+            
+            const quantity = parseInt(document.getElementById('label-quantity').value) || 1;
+            
+            // Create CSV content with quantities
+            let csvContent = "data:text/csv;charset=utf-8,Quantity,Bin Location\n";
+            window.labelsData.forEach(label => {
+                csvContent += `${quantity},${label}\n`;
+            });
+            
+            // Create download link
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "bin_labels.csv");
+            document.body.appendChild(link);
+            
+            // Download file
+            link.click();
+            document.body.removeChild(link);
+        });
+        
+        document.getElementById('copy-btn').addEventListener('click', function() {
+            if (!window.formattedLabelsData) return;
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(window.formattedLabelsData).then(function() {
+                // Show success message
+                const successMsg = document.getElementById('copy-success');
+                successMsg.style.display = 'block';
+                
+                // Hide message after animation completes
+                setTimeout(function() {
+                    successMsg.style.display = 'none';
+                }, 3500);
+            });
+        });
+    </script>
+</body>
+</html>

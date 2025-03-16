@@ -786,6 +786,76 @@
                 }, 3500);
             });
         });
-    </script>
+// Find the existing script section in your HTML and add this code at the end, before the closing tag
+
+// Function to set up click-to-clear behavior for input fields
+function setupClearOnClickBehavior() {
+    // Get all input fields in range-inputs class
+    const rangeInputs = document.querySelectorAll('.range-inputs input');
+    
+    // Add event listener to each input
+    rangeInputs.forEach(input => {
+        // Store the original value when the page loads
+        input.dataset.defaultValue = input.value;
+        
+        // When the input is clicked
+        input.addEventListener('focus', function() {
+            // If the current value is still the default value, clear it
+            if (this.value === this.dataset.defaultValue) {
+                this.value = '';
+            }
+        });
+        
+        // When the input loses focus
+        input.addEventListener('blur', function() {
+            // If the field was left empty, restore the default value
+            if (this.value === '') {
+                this.value = this.dataset.defaultValue;
+            }
+        });
+    });
+}
+
+// Run the setup function for existing inputs when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    setupClearOnClickBehavior();
+});
+
+// Store the original addNewRange function to modify it
+const originalAddNewRange = addNewRange;
+
+// Replace the addNewRange function with our enhanced version
+addNewRange = function(componentType) {
+    // Call the original function
+    originalAddNewRange(componentType);
+    
+    // Get the container for this component type
+    const container = document.getElementById(`${componentType}-container`);
+    
+    // Find the newly added box (it will be the last one)
+    const boxes = container.querySelectorAll(`.component-box[data-component="${componentType}"]`);
+    const newBox = boxes[boxes.length - 1];
+    
+    // Find the input fields in this new box
+    const inputs = newBox.querySelectorAll('.range-inputs input');
+    
+    // Set up clear-on-click behavior for these new inputs
+    inputs.forEach(input => {
+        input.dataset.defaultValue = input.value;
+        
+        input.addEventListener('focus', function() {
+            if (this.value === this.dataset.defaultValue) {
+                this.value = '';
+            }
+        });
+        
+        input.addEventListener('blur', function() {
+            if (this.value === '') {
+                this.value = this.dataset.defaultValue;
+            }
+        });
+    });
+};
+    </script>  
 </body>
 </html>

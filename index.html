@@ -195,19 +195,19 @@
             transform: translateY(0);
         }
         .download-btn {
-            background-color: #44a89e;
+            background-color: #3c4ff6;
             color: white;
         }
         .download-btn:hover {
-            background-color: #53c3b8;
+            background-color: #3c4ff6;
             box-shadow: 0 4px 10px rgba(68, 168, 158, 0.3);
         }
         .copy-btn {
-            background-color: #b35f2e;
+            background-color: #9B6BF2;
             color: white;
         }
         .copy-btn:hover {
-            background-color: #d27539;
+            background-color: #9B6BF2;
             box-shadow: 0 4px 10px rgba(179, 95, 46, 0.3);
         }
         #results {
@@ -334,56 +334,56 @@
                 </div>
             </div>
             
-            <div id="section-container">
-                <div class="component-box" data-component="section" data-index="0">
+            <div id="primary-container">
+                <div class="component-box" data-component="primary" data-index="0">
                     <div class="component-header">
                         <div class="component-title">
-                            <input type="checkbox" id="use-section-0" checked>
-                            <label for="use-section-0">Section</label>
+                            <input type="checkbox" id="use-primary-0" checked>
+                            <label for="use-primary-0">Primary</label>
                         </div>
                         <div class="component-actions">
-                            <button class="add-range-btn" data-component="section">+</button>
+                            <button class="add-range-btn" data-component="primary">+</button>
                         </div>
                     </div>
-                    <div id="section-inputs-0" class="range-inputs">
-                        <input type="text" class="section-start" value="1" placeholder="Start">
-                        <input type="text" class="section-end" value="1" placeholder="End">
+                    <div id="primary-inputs-0" class="range-inputs">
+                        <input type="text" class="primary-start" value="1" placeholder="Start">
+                        <input type="text" class="primary-end" value="1" placeholder="End">
                     </div>
                 </div>
             </div>
             
-            <div id="bin-container">
-                <div class="component-box" data-component="bin" data-index="0">
+            <div id="mid-container">
+                <div class="component-box" data-component="mid" data-index="0">
                     <div class="component-header">
                         <div class="component-title">
-                            <input type="checkbox" id="use-bin-0" checked>
-                            <label for="use-bin-0">Bin</label>
+                            <input type="checkbox" id="use-mid-0" checked>
+                            <label for="use-mid-0">Mid</label>
                         </div>
                         <div class="component-actions">
-                            <button class="add-range-btn" data-component="bin">+</button>
+                            <button class="add-range-btn" data-component="mid">+</button>
                         </div>
                     </div>
-                    <div id="bin-inputs-0" class="range-inputs">
-                        <input type="text" class="bin-start" value="1" placeholder="Start">
-                        <input type="text" class="bin-end" value="100" placeholder="End">
+                    <div id="mid-inputs-0" class="range-inputs">
+                        <input type="text" class="mid-start" value="1" placeholder="Start">
+                        <input type="text" class="mid-end" value="100" placeholder="End">
                     </div>
                 </div>
             </div>
             
-            <div id="shelf-container">
-                <div class="component-box" data-component="shelf" data-index="0">
+            <div id="secondary-container">
+                <div class="component-box" data-component="secondary" data-index="0">
                     <div class="component-header">
                         <div class="component-title">
-                            <input type="checkbox" id="use-shelf-0" checked>
-                            <label for="use-shelf-0">Shelf</label>
+                            <input type="checkbox" id="use-secondary-0" checked>
+                            <label for="use-secondary-0">Secondary</label>
                         </div>
                         <div class="component-actions">
-                            <button class="add-range-btn" data-component="shelf">+</button>
+                            <button class="add-range-btn" data-component="secondary">+</button>
                         </div>
                     </div>
-                    <div id="shelf-inputs-0" class="range-inputs">
-                        <input type="text" class="shelf-start" value="1" placeholder="Start">
-                        <input type="text" class="shelf-end" value="1" placeholder="End">
+                    <div id="secondary-inputs-0" class="range-inputs">
+                        <input type="text" class="secondary-start" value="1" placeholder="Start">
+                        <input type="text" class="secondary-end" value="1" placeholder="End">
                     </div>
                 </div>
             </div>
@@ -459,7 +459,7 @@
             if (componentType === 'prefix' || componentType === 'suffix') {
                 startValue = "A";
                 endValue = "A";
-            } else if (componentType === 'bin') {
+            } else if (componentType === 'mid') {
                 endValue = "100";
             }
             
@@ -515,16 +515,16 @@
             document.getElementById('prefix-inputs-0').style.display = this.checked ? 'flex' : 'none';
         });
         
-        document.getElementById('use-section-0').addEventListener('change', function() {
-            document.getElementById('section-inputs-0').style.display = this.checked ? 'flex' : 'none';
+        document.getElementById('use-primary-0').addEventListener('change', function() {
+            document.getElementById('primary-inputs-0').style.display = this.checked ? 'flex' : 'none';
         });
         
-        document.getElementById('use-bin-0').addEventListener('change', function() {
-            document.getElementById('bin-inputs-0').style.display = this.checked ? 'flex' : 'none';
+        document.getElementById('use-mid-0').addEventListener('change', function() {
+            document.getElementById('mid-inputs-0').style.display = this.checked ? 'flex' : 'none';
         });
         
-        document.getElementById('use-shelf-0').addEventListener('change', function() {
-            document.getElementById('shelf-inputs-0').style.display = this.checked ? 'flex' : 'none';
+        document.getElementById('use-secondary-0').addEventListener('change', function() {
+            document.getElementById('secondary-inputs-0').style.display = this.checked ? 'flex' : 'none';
         });
         
         document.getElementById('use-suffix-0').addEventListener('change', function() {
@@ -658,9 +658,9 @@
             // For browser performance, limit to a reasonable number
             const totalCombinations = 
                 valueSets.prefix.length * 
-                valueSets.section.length * 
-                valueSets.bin.length * 
-                valueSets.shelf.length * 
+                valueSets.primary.length * 
+                valueSets.mid.length * 
+                valueSets.secondary.length * 
                 valueSets.suffix.length;
             
             if (totalCombinations > 10000) {
@@ -672,11 +672,11 @@
             const maxLabels = 100000; // Set a max limit to prevent browser crashes
             
             for (const prefix of valueSets.prefix) {
-                for (const section of valueSets.section) {
-                    for (const bin of valueSets.bin) {
-                        for (const shelf of valueSets.shelf) {
+                for (const primary of valueSets.primary) {
+                    for (const mid of valueSets.mid) {
+                        for (const secondary of valueSets.secondary) {
                             for (const suffix of valueSets.suffix) {
-                                const label = `${prefix}${section}${bin}${shelf}${suffix}`;
+                                const label = `${prefix}${primary}${mid}${secondary}${suffix}`;
                                 if (label.trim() !== '') {  // Don't add empty labels
                                     labels.push(label);
                                 }
@@ -698,9 +698,9 @@
             // Get all component data
             const componentData = {
                 prefix: getComponentData('prefix'),
-                section: getComponentData('section'),
-                bin: getComponentData('bin'),
-                shelf: getComponentData('shelf'),
+                primary: getComponentData('primary'),
+                mid: getComponentData('mid'),
+                secondary: getComponentData('secondary'),
                 suffix: getComponentData('suffix')
             };
             
